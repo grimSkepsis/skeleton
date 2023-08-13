@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import { GetTodos } from "@/services/todos";
 import { Button } from "@mui/material";
+import TodoForm from "@/components/todo-form";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function Home() {
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
         <Button onClick={onGetTodos}>Get todos</Button>
+        <TodoForm />
       </main>
     </>
   );
