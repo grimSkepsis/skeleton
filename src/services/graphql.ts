@@ -1,6 +1,6 @@
 import { DocumentNode, print } from "graphql";
 import axios from "axios";
-import { getApiRoutes } from "@/util/routes";
+import { buildExternalURL, getApiRoutes } from "@/util/routes";
 
 export async function query(
   query: DocumentNode,
@@ -8,7 +8,7 @@ export async function query(
   cookie?: string
 ) {
   const response = await axios.post(
-    getApiRoutes().graphql,
+    buildExternalURL(getApiRoutes().graphql),
     {
       query: print(query),
       variables: args,
@@ -33,7 +33,7 @@ export async function mutation(
   cookie?: string
 ) {
   const response = await axios.post(
-    getApiRoutes().graphql,
+    buildExternalURL(getApiRoutes().graphql),
     {
       mutation: print(mutation),
       variables: args,

@@ -2,16 +2,23 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import { GetTodos } from "@/services/todos";
-import { Button } from "@mui/material";
+import { GetTodos, GetTodosPaginated } from "@/services/todos";
+import { Button, Pagination } from "@mui/material";
 import TodoForm from "@/components/todo-form";
+import { TODO_PAGE_SIZE, Todo, TodoConnection } from "@/services/todos/models";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
-  async function onGetTodos() {
-    const todos = await GetTodos();
-    console.log(todos);
+type Props = {
+  todosConnection: TodoConnection;
+};
+export default function Home({ todosConnection }: Props) {
+  const [todos, setTodos] = useState(todosConnection);
+  async function onGetTodos(newPage: number) {
+    const newTodos = await GetTodosPaginated(TODO_PAGE_SIZE, newPage);
+    setTodos(newTodos);
+    console.log(newTodos);
   }
 
   return (
@@ -22,10 +29,27 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <main className={`${styles.main} ${inter.className}`}>
-        <Button onClick={onGetTodos}>Get todos</Button>
+        {todos?.edges.map((todo) => {
+          return <div key={todo.id}>{todo.text}</div>;
+        })}
+        <Pagination
+          page={todos.pageInfo.currentPage}
+          count={todos.pageInfo.totalPages}
+          onChange={(event, newPage) => onGetTodos(newPage)}
+        />
         <TodoForm />
       </main>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const todosConnection = await GetTodosPaginated(TODO_PAGE_SIZE, 1);
+  return {
+    props: {
+      todosConnection,
+    },
+  };
 }

@@ -37,7 +37,6 @@ export default async function handler(
         `,
         variables,
       });
-      console.log("Data:", data);
 
       res.status(200).json({ data });
     } else if (mutation) {
