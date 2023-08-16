@@ -1,21 +1,17 @@
 import { CreateTodo } from "@/services/todos";
 import { Button, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-
-type TodoFormData = {
-  text: string;
-};
+import { TodoFormData } from "./types";
 
 type Props = {
-  onCreateTodo: () => void;
+  onCreateTodo: (data: TodoFormData) => void;
 };
 
 export default function TodoForm({ onCreateTodo }: Props) {
   const { register, handleSubmit, reset } = useForm<TodoFormData>();
 
   async function onSubmit(data: TodoFormData) {
-    const newTodo = await CreateTodo({ text: data.text, userId: "1234" });
-    onCreateTodo();
+    onCreateTodo(data);
     reset();
   }
 

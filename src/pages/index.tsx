@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.scss";
 import {
+  CreateTodo,
   DeleteTodo,
   GetTodoStats,
   GetTodos,
@@ -27,6 +28,7 @@ import {
 import { useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
 import { toast } from "react-toastify";
+import { TodoFormData } from "@/components/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -65,6 +67,11 @@ export default function Home({ todosConnection, todoStats }: Props) {
   async function refreshStats() {
     const newTodoStats = await GetTodoStats();
     setCurrTodoStats(newTodoStats);
+  }
+
+  async function onCreateTodo(data: TodoFormData) {
+    await CreateTodo({ text: data.text, userId: "test1234" });
+    await onGetTodos(1);
   }
 
   return (
@@ -116,7 +123,7 @@ export default function Home({ todosConnection, todoStats }: Props) {
             onChange={(event, newPage) => onGetTodos(newPage)}
           />
         )}
-        <TodoForm onCreateTodo={() => onGetTodos(1)} />
+        <TodoForm onCreateTodo={onCreateTodo} />
       </main>
     </>
   );
