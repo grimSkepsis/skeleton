@@ -11,9 +11,15 @@ export type Todo = {
   done: boolean;
 };
 
+export type TodoStats = {
+  total: number;
+  totalCompleted: number;
+  aggregateText: string;
+};
+
 export type TodoConnection = {
   edges: Todo[];
   pageInfo: PageInfo;
 };
 
-export const TODO_PAGE_SIZE = 2;
+export const TODO_PAGE_SIZE = 10;

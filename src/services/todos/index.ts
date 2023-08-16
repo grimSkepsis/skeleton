@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { mutation, query } from "../graphql";
-import { NewTodo, Todo, TodoConnection } from "./models";
+import { NewTodo, Todo, TodoConnection, TodoStats } from "./models";
 import { TODO_CONNECTION_FRAGMENT } from "./fragments";
 
 export function GetTodos() {
@@ -16,6 +16,21 @@ export function GetTodos() {
     `,
     {}
   ).then((res) => res.todos);
+}
+
+export function GetTodoStats(): Promise<TodoStats> {
+  return query(
+    gql`
+      query todoStats {
+        todoStats {
+          aggregateText
+          totalCompleted
+          total
+        }
+      }
+    `,
+    {}
+  ).then((res) => res.todoStats);
 }
 
 export function GetTodosPaginated(
