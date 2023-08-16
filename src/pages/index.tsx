@@ -1,12 +1,19 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
-import { GetTodos, GetTodosPaginated } from "@/services/todos";
-import { Button, Pagination } from "@mui/material";
+import styles from "@/styles/Home.module.scss";
+import {
+  DeleteTodo,
+  GetTodos,
+  GetTodosPaginated,
+  UpdateTodo,
+} from "@/services/todos";
+import { Box, Button, Checkbox, Icon, Pagination } from "@mui/material";
 import TodoForm from "@/components/todo-form";
 import { TODO_PAGE_SIZE, Todo, TodoConnection } from "@/services/todos/models";
 import { useState } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
+import { toast } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +28,22 @@ export default function Home({ todosConnection }: Props) {
     console.log(newTodos);
   }
 
+  async function onUpdateTodo(id: string, done: boolean) {
+    await UpdateTodo(id, done);
+    const newTodos = await GetTodosPaginated(
+      TODO_PAGE_SIZE,
+      todos.pageInfo.currentPage
+    );
+    setTodos(newTodos);
+  }
+
+  async function onDeleteTodo(id: string) {
+    await DeleteTodo(id);
+    const newTodos = await GetTodosPaginated(TODO_PAGE_SIZE, 1);
+    setTodos(newTodos);
+    toast.success("Todo deleted");
+  }
+
   return (
     <>
       <Head>
@@ -32,14 +55,22 @@ export default function Home({ todosConnection }: Props) {
 
       <main className={`${styles.main} ${inter.className}`}>
         {todos?.edges.map((todo) => {
-          return <div key={todo.id}>{todo.text}</div>;
+          return (
+            <Box key={todo.id} className={styles.todoItem}>
+              <Checkbox
+                checked={todo.done}
+                onChange={() => onUpdateTodo(todo.id, !todo.done)}
+              />{" "}
+              {todo.text} <ClearIcon onClick={() => onDeleteTodo(todo.id)} />
+            </Box>
+          );
         })}
         <Pagination
           page={todos.pageInfo.currentPage}
           count={todos.pageInfo.totalPages}
           onChange={(event, newPage) => onGetTodos(newPage)}
         />
-        <TodoForm />
+        <TodoForm onCreateTodo={() => onGetTodos(1)} />
       </main>
     </>
   );

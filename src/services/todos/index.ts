@@ -52,3 +52,29 @@ export function CreateTodo(input: NewTodo): Promise<Todo> {
     { input }
   ).then((res) => res.todos);
 }
+
+export function DeleteTodo(id: string): Promise<boolean> {
+  return mutation(
+    gql`
+      mutation deleteTodoById($id: String!) {
+        deleteTodoById(id: $id)
+      }
+    `,
+    { id }
+  ).then((res) => res.deleteTodoById);
+}
+
+export function UpdateTodo(id: string, done: boolean): Promise<Todo> {
+  return mutation(
+    gql`
+      mutation updateTodoById($id: String!, $done: Boolean!) {
+        updateTodoById(id: $id, done: $done) {
+          id
+          text
+          done
+        }
+      }
+    `,
+    { id, done }
+  ).then((res) => res.updateTodoById);
+}

@@ -7,6 +7,18 @@
   min-height: 100vh;
 }
 
+.todoItem {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  svg {
+    cursor: pointer;
+    :hover {
+      opacity: 0.5;
+    }
+  }
+}
+
 .description {
   display: inherit;
   justify-content: inherit;
@@ -97,7 +109,7 @@
 
 .center::before,
 .center::after {
-  content: '';
+  content: "";
   left: 50%;
   position: absolute;
   filter: blur(45px);
