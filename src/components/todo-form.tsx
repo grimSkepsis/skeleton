@@ -1,7 +1,6 @@
-import { CreateTodo } from "@/services/todos";
-import { Button, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { TodoFormData } from "./types";
+import { Button, TextField, Typography } from "@mui/material";
 
 type Props = {
   onCreateTodo: (data: TodoFormData) => void;
@@ -18,9 +17,19 @@ export default function TodoForm({ onCreateTodo }: Props) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Typography typography={"label"}>Text:</Typography>
-      <TextField type="text" id="text" {...register("text")} />
+      <TextField
+        // data-testid="text-input"
+        type="text"
+        id="text"
+        {...register("text")}
+        inputProps={{ "data-testid": "text-input" }}
+      />
       <div>
-        <Button type="submit" style={{ width: "100%", marginTop: "2rem" }}>
+        <Button
+          type="submit"
+          style={{ width: "100%", marginTop: "2rem" }}
+          data-testid="submit-button"
+        >
           Create Todo
         </Button>
       </div>
